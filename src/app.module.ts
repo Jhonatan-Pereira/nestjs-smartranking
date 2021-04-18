@@ -4,7 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { JogadoresModule } from './jogadores/jogadores.module';
 import { ConfigModule } from '@nestjs/config';
-import { environment } from './environments/environment'
+import { environment } from './environments/environment-jhonatan'
 @Module({
   imports: [
     JogadoresModule,
