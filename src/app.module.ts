@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { JogadoresModule } from './jogadores/jogadores.module';
 import { ConfigModule } from '@nestjs/config';
 import { environment } from './environments/environment-jhonatan'
+import { CategoriasModule } from './categorias/categorias.module';
 @Module({
   imports: [
     JogadoresModule,
@@ -17,7 +18,8 @@ import { environment } from './environments/environment-jhonatan'
         useUnifiedTopology: true,
         useFindAndModify: false,
       }
-    )
+    ),
+    CategoriasModule
   ],
   controllers: [AppController],
   providers: [AppService],
