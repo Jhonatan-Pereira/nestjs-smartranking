@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { AtualizarJogadorDTO } from './dto/atualizar-jogador.dto';
 import { CriarJogadorDTO } from './dto/criar-jogador.dto'
 import { Jogador } from './interfaces/jogador.interface';
 import { JogadoresService } from './jogadores.service';
+import { JogadoresValidacaoParametrosPipe } from './pipes/jogadores-validacao-parametros.pipe';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
@@ -10,27 +12,38 @@ export class JogadoresController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  async criarAtualizarJogador(
+  async criarJogador(
     @Body() criarJogadorDTO: CriarJogadorDTO
-  ) {
-    await this.jogadoresService.criarAtualizarJogador(criarJogadorDTO);
+  ): Promise<Jogador> {
+    return await this.jogadoresService.criarJogador(criarJogadorDTO);
+  }
+
+  @Put('/:_id')
+  @UsePipes(ValidationPipe)
+  async atualizarJogador(
+    @Body() atualizarJogadorDTO: AtualizarJogadorDTO,
+    @Param('_id', JogadoresValidacaoParametrosPipe) _id: string
+  ): Promise<void> {
+    await this.jogadoresService.atualizarJogador(_id, atualizarJogadorDTO);
   }
 
   @Get()
-  async consultarJogadores(
-    @Query('email') email: string
-  ): Promise<Jogador[]|Jogador> {
-    if(email) {
-      return this.jogadoresService.consultaJogadorPorEmail(email);
-    }
+  async consultarJogadores(): Promise<Jogador[]> {
     return this.jogadoresService.consultarTodosJogadores();
   }
 
-  @Delete()
+  @Get('/:_id')
+  async consultarJogadorPeloId(
+    @Param('_id', JogadoresValidacaoParametrosPipe) _id: string
+  ): Promise<Jogador> {
+    return this.jogadoresService.consultarJogadorPeloId(_id);
+  }
+
+  @Delete('/:_id')
   async deletarJogador(
-    @Query('email') email: string
+    @Param('_id', JogadoresValidacaoParametrosPipe) _id: string
   ): Promise<void> {
-    this.jogadoresService.deletarJogadorPorEmail(email);
+    this.jogadoresService.deletarJogadorPorEmail(_id);
   }
 
 }
