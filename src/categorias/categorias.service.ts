@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { AtualizarCategoriaDTO } from './dtos/atualizar-categoria.dto';
 import { CriarCategoriaDTO } from './dtos/criar-categoria.dto';
 import { Categoria } from './interfaces/categoria.interface';
 
@@ -37,6 +38,18 @@ export class CategoriasService {
     }
 
     return categoriaEncontrada
+  }
+
+  async atualizarCategoria(categoria: string, atualizarCategoriaDTO: AtualizarCategoriaDTO) {
+
+    const categoriaEncontrada = await this.categoriaModel.findOne({ categoria }).exec()
+
+    if(!categoriaEncontrada) {
+      throw new NotFoundException(`Categoria ${categoria} não encontrada!`)
+    }
+
+    await this.categoriaModel.findOneAndUpdate({ categoria }, { $set: atualizarCategoriaDTO }).exec()
+
   }
 
 }
