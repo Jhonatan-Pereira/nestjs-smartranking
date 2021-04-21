@@ -1,6 +1,7 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Jogador } from 'src/jogadores/interfaces/jogador.interface';
 import { JogadoresService } from 'src/jogadores/jogadores.service';
 import { AtualizarCategoriaDTO } from './dtos/atualizar-categoria.dto';
 import { CriarCategoriaDTO } from './dtos/criar-categoria.dto';
@@ -8,6 +9,8 @@ import { Categoria } from './interfaces/categoria.interface';
 
 @Injectable()
 export class CategoriasService {
+
+  private readonly logger = new Logger(CategoriasService.name);
 
   constructor(
     @InjectModel('Categoria') private readonly categoriaModel: Model<Categoria>,
@@ -40,6 +43,26 @@ export class CategoriasService {
     }
 
     return categoriaEncontrada
+  }
+
+  async consultarCategoriaDoJogador(_id: any): Promise<Categoria> {
+    // const categorias = await this.categoriaModel.find().populate('jogadores').exec();
+
+    // const categoriaDoJogador = categorias.find(categoria => {
+    //   const jogadorEncontrado = categoria.jogadores.find(jogador => jogador._id == idJogador)
+    //   if(jogadorEncontrado) return true
+    //   return false
+    // })
+
+    // return categoriaDoJogador
+
+    return await this.categoriaModel.findOne()
+      .where('jogadores')
+      .in(_id)
+      .populate('solicitante')
+      .populate('jogadores')
+      .populate('partida')
+      .exec()
   }
 
   async atualizarCategoria(categoria: string, atualizarCategoriaDTO: AtualizarCategoriaDTO) {

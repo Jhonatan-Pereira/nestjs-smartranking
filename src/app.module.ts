@@ -6,6 +6,7 @@ import { JogadoresModule } from './jogadores/jogadores.module';
 import { ConfigModule } from '@nestjs/config';
 import { environment } from './environments/environment-jhonatan'
 import { CategoriasModule } from './categorias/categorias.module';
+import { DesafiosModule } from './desafios/desafios.module';
 @Module({
   imports: [
     JogadoresModule,
@@ -19,7 +20,8 @@ import { CategoriasModule } from './categorias/categorias.module';
         useFindAndModify: false,
       }
     ),
-    CategoriasModule
+    CategoriasModule,
+    DesafiosModule
   ],
   controllers: [AppController],
   providers: [AppService],
